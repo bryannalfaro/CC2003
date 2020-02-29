@@ -2,6 +2,13 @@
 #19372
 #Algoritmos y estructuras de datos
 
+#Referencias
+#https://readthedocs.org/projects/simpy/downloads/pdf/latest/
+#https://simpy.readthedocs.io/en/latest/topical_guides/resources.html
+#https://docs.python.org/2/library/random.html
+#https://docs.sympy.org/latest/index.html
+#Apoyo de recursos de Canvas sobre el tema de simulaciones
+
 #Importar librerias necesarias
 import simpy
 import random
