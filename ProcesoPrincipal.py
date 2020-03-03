@@ -3,15 +3,19 @@
 #Algoritmos y estructuras de datos
 
 import random
+import statistics as stats
 #Variables para tiempos y mediciones
-tiempo_total=0
+tiempo_total_proceso=0
 tiempo_procesos=[]
-tiempo_inicio=0
 tiempo_final=0
+tiempo_inicio=0
+tiempo_total=0
+
 CPU_instrucciones=3 #Cantidad posible de instrucciones del CPU
 
 #Donde hace el proceso
-def ejecucion_procesos(env,nombre,CPU,RAM,Espera):
+def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
+    
     intervalo=10 #Intervalo de llegada al CPU
     tiempo_llegada=random.expovariate(1.0/intervalo) #Tiempo de llegada
     cantidad_instrucciones_proceso=random.randint(1,10)#Cuantas instrucciones tiene el proceso
@@ -22,26 +26,60 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera):
     
     print("Llego el proceso",nombre,"en momento",tiempo_inicio)
     with RAM.get(cantidad_ram_consumida) as cola1:
+        
         print("Proceso",nombre,"entro a la RAM en",env.now)
         print("Ocupa espacio de: ",cantidad_ram_consumida)
         
         while((cantidad_instrucciones_proceso)>0):
+            
             with CPU.request() as request:
-                yield request
+                yield request#Requerir al CPU
+                yield env.timeout(1)
+                
                 print("Proceso",nombre, "esta corriendo")
+                
+               
                 cantidad_instrucciones_proceso=cantidad_instrucciones_proceso-CPU_instrucciones #quitar 3 en este caso
+                
                 if((cantidad_instrucciones_proceso)<=0):
                     cantidad_instrucciones_proceso=0 #Eliminar numeros restantes
-                    tiempo_final=env.now #Tiempo final del CPU y su proceso
+                    
                     RAM.put(cantidad_ram_consumida)#devolver RAM
                     print("Proceso",nombre,"sale del CPU")
+                    tiempo_final=env.now #Tiempo final del CPU y su proceso
+                    
+                    
                 else:
                     eleccion=random.randint(1,2)
+                    print("Random ",eleccion)
                     if(eleccion==1): #Agregar a Waiting
                         with Espera.request() as requestEspera:
-                            yield requestEspera
+                            yield requestEspera#Cola de Waiting
+                            yield env.timeout(1)
+                            print("Se agrego a la cola waiting")
                     else:
                         print("Fue agregado el proceso", nombre, "a ready")
+                        
+        calcularPromedio_Desviacion(tiempo_inicio,tiempo_final,procesos)
+
         
+def calcularPromedio_Desviacion(tiempo_inicio,tiempo_final,procesos):
+    print(tiempo_inicio)
+    print(tiempo_final)
+    tiempo_total_proceso=tiempo_final-tiempo_inicio
     
+    tiempo_procesos.append(tiempo_total_proceso)
+    tiempo_total=tiempo_final
+    
+    promedio=float(tiempo_total)/float(procesos)
+    if(len(tiempo_procesos)>1):
+        desviacion=stats.stdev(tiempo_procesos)
+        print("Desviacion: ",desviacion)
+    
+#    print("Total tiempo de proceso",tiempo_total_proceso)
+#    print("Total tiempo ",tiempo_total)
+    print("Promedio: ",promedio)
+   
+
+
     
