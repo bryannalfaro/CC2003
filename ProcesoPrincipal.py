@@ -53,8 +53,7 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
                     print("Random ",eleccion)
                     if(eleccion==1): #Agregar a Waiting
                         with Espera.request() as requestEspera:
-                            yield requestEspera#Cola de Waiting
-                            yield env.timeout(1)
+                            yield requestEspera#Cola de Waiting                           
                             print("Se agrego a la cola waiting")
                     else:
                         print("Fue agregado el proceso", nombre, "a ready")

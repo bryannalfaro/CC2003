@@ -17,7 +17,7 @@ import ProcesoPrincipal as procesar
 
 environment= simpy.Environment()#Crear el espacio del proceso
 memoria_RAM= simpy.Container(environment, capacity=100)#Capacidad de 100 para la RAM
-CPU_proceso= simpy.Resource(environment, capacity=2) #Solo 1 cpu
+CPU_proceso= simpy.Resource(environment, capacity=1) #Solo 1 cpu
 Espera=simpy.Resource(environment, capacity=1) #La parte donde espera el CPU
 random.seed(245) #Haciendo la semilla
 
