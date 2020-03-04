@@ -9,7 +9,7 @@ tiempo_total_proceso=0
 tiempo_procesos=[]
 tiempo_final=0
 tiempo_inicio=0
-tiempo_total=0
+
 
 CPU_instrucciones=3 #Cantidad posible de instrucciones del CPU
 
@@ -26,6 +26,7 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
     
     print("Llego el proceso",nombre,"en momento",tiempo_inicio)
     with RAM.get(cantidad_ram_consumida) as cola1:
+        yield env.timeout(tiempo_llegada)
         
         print("Proceso",nombre,"entro a la RAM en",env.now)
         print("Ocupa espacio de: ",cantidad_ram_consumida)
@@ -34,12 +35,11 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
             
             with CPU.request() as request:
                 yield request#Requerir al CPU
+                print("Entro al CPU")
                 yield env.timeout(1)
-                
                 print("Proceso",nombre, "esta corriendo")
                 
-               
-                cantidad_instrucciones_proceso=cantidad_instrucciones_proceso-CPU_instrucciones #quitar 3 en este caso
+                cantidad_instrucciones_proceso=((cantidad_instrucciones_proceso)-(CPU_instrucciones)) #quitar 3 en este caso
                 
                 if((cantidad_instrucciones_proceso)<=0):
                     cantidad_instrucciones_proceso=0 #Eliminar numeros restantes
@@ -47,8 +47,7 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
                     RAM.put(cantidad_ram_consumida)#devolver RAM
                     print("Proceso",nombre,"sale del CPU")
                     tiempo_final=env.now #Tiempo final del CPU y su proceso
-                    
-                    
+                          
                 else:
                     eleccion=random.randint(1,2)
                     print("Random ",eleccion)
@@ -69,15 +68,14 @@ def calcularPromedio_Desviacion(tiempo_inicio,tiempo_final,procesos):
     tiempo_total_proceso=tiempo_final-tiempo_inicio
     
     tiempo_procesos.append(tiempo_total_proceso)
-    tiempo_total=tiempo_final
     
-    promedio=float(tiempo_total)/float(procesos)
-    if(len(tiempo_procesos)>1):
+    print("Procesos: ",procesos)
+    promedio=sum(tiempo_procesos)/len(tiempo_procesos)
+    if(len(tiempo_procesos)>3):
         desviacion=stats.stdev(tiempo_procesos)
         print("Desviacion: ",desviacion)
     
-#    print("Total tiempo de proceso",tiempo_total_proceso)
-#    print("Total tiempo ",tiempo_total)
+    print("Total tiempo de proceso",tiempo_total_proceso)
     print("Promedio: ",promedio)
    
 
