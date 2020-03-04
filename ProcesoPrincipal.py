@@ -35,7 +35,7 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
             
             with CPU.request() as request:
                 yield request#Requerir al CPU
-                print("Entro al CPU")
+                print("Proceso",nombre,"entro al CPU")
                 yield env.timeout(1)
                 print("Proceso",nombre, "esta corriendo")
                 
@@ -71,7 +71,7 @@ def calcularPromedio_Desviacion(tiempo_inicio,tiempo_final,procesos):
     
     print("Procesos: ",procesos)
     promedio=sum(tiempo_procesos)/len(tiempo_procesos)
-    if(len(tiempo_procesos)>3):
+    if(len(tiempo_procesos)>1):#Esto porque necesita dos datos para poder calcular la desviacion
         desviacion=stats.stdev(tiempo_procesos)
         print("Desviacion: ",desviacion)
     
