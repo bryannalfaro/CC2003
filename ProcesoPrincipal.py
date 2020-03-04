@@ -35,13 +35,13 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
             
             with CPU.request() as request:
                 yield request#Requerir al CPU
-                print("Proceso",nombre,"entro al CPU")
                 yield env.timeout(1)
+                
                 print("Proceso",nombre, "esta corriendo")
                 
                 cantidad_instrucciones_proceso=((cantidad_instrucciones_proceso)-(CPU_instrucciones)) #quitar 3 en este caso
-                
-                if((cantidad_instrucciones_proceso)<=0):
+               
+               if((cantidad_instrucciones_proceso)<=0):
                     cantidad_instrucciones_proceso=0 #Eliminar numeros restantes
                     
                     RAM.put(cantidad_ram_consumida)#devolver RAM
