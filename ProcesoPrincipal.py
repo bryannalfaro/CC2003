@@ -13,7 +13,7 @@ tiempo_inicio=0
 
 CPU_instrucciones=3 #Cantidad posible de instrucciones del CPU
 
-#Donde hace el proceso
+
 def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
     
     intervalo=10 #Intervalo de llegada al CPU
@@ -24,13 +24,13 @@ def ejecucion_procesos(env,nombre,CPU,RAM,Espera,procesos):
     yield env.timeout(tiempo_llegada)
     tiempo_inicio=env.now#Tomar el tiempo inicial del proceso para calculos
     
-    print("Llego el proceso",nombre,"en momento",tiempo_inicio)
+    print("Llego proceso",nombre,"en tiempo",tiempo_inicio)
     with RAM.get(cantidad_ram_consumida) as cola1:
         yield env.timeout(tiempo_llegada)
         
         print("Proceso",nombre,"entro a la RAM en",env.now)
-        print("Ocupa espacio de: ",cantidad_ram_consumida)
         
+        #Esto se ejecuta mientras el procesador aun tenga instrucciones por hacer.
         while((cantidad_instrucciones_proceso)>0):
             
             with CPU.request() as request:
@@ -66,7 +66,7 @@ def calcularPromedio_Desviacion(tiempo_inicio,tiempo_final,procesos):
     print(tiempo_final)
     tiempo_total_proceso=tiempo_final-tiempo_inicio
     
-    tiempo_procesos.append(tiempo_total_proceso)
+    tiempo_procesos.append(tiempo_total_proceso)#Agrega a la lista el tiempo de cada proces
     
     print("Procesos: ",procesos)
     promedio=sum(tiempo_procesos)/len(tiempo_procesos)
